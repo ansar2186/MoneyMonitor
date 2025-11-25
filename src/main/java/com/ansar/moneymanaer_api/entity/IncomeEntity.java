@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ public class IncomeEntity {
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+    private String createdBy;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
@@ -46,6 +48,9 @@ public class IncomeEntity {
     public void prePersist() {
         if (this.date == null) {
             this.date = LocalDate.now();
+        }
+        if(this.createdBy == null) {
+            this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
         }
 
     }

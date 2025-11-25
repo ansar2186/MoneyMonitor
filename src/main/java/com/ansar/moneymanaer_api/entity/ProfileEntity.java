@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 
@@ -33,10 +34,15 @@ public class ProfileEntity {
     private Boolean isActive;
     private String activationToken;
 
+    private String createdBy;
+
     @PrePersist
     public void prePersist() {
         if (this.isActive == null) {
             isActive = false;
+        }
+        if(this.createdBy == null) {
+            this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
         }
     }
 }

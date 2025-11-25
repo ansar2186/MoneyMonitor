@@ -39,7 +39,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs",
-                                "/login","/authLogin", "/register", "/status", "/health", "/logout", "/activate","refresh-token"
+                                "/login","/authLogin", "/register", "/status", "/health",
+                                "/logout", "/activate","refresh-token"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

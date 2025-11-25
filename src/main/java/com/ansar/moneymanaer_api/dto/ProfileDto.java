@@ -17,5 +17,6 @@ public class ProfileDto {
     private String password;
     private String profileImageUrl;
     private LocalDateTime createdAt;
+    private String createdBy;
     private LocalDateTime updatedAt;
 }

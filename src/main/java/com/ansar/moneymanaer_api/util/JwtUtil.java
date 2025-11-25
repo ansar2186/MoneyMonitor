@@ -17,7 +17,7 @@ public class JwtUtil {
     private String secretKey;
 
     @Value("${jwt.access.expiration}")
-    private long accessTokenExpiration; // 15 minutes in milliseconds
+    private long accessTokenExpiration; // 24 hrs
 
     @Value("${jwt.refresh.expiration}")
     private long refreshTokenExpiration; // 7 days in milliseconds

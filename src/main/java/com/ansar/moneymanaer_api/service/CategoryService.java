@@ -8,14 +8,8 @@ import com.ansar.moneymanaer_api.repository.CategoryRepository;
 import com.ansar.moneymanaer_api.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +23,7 @@ public class CategoryService {
         ProfileEntity currentProfile = profileService.getCurrentProfile();
         log.info("Current Profile : {}", currentProfile.getEmail());
         if (categoryRepository.existsByNameAndProfileId(categoryDto.getName(), currentProfile.getId())) {
-           log.info("Category already exists : {}", categoryDto.getName());
+            log.info("Category already exists : {}", categoryDto.getName());
             throw new CategoryAlreadyExistException("Category already exists");
         }
         CategoryEntity categoryEntity = MapperUtil.dtoToCategoryEntity(categoryDto, currentProfile);
@@ -46,14 +40,17 @@ public class CategoryService {
 
     public List<CategoryDto> getCategoriesByTypeForCurrentUser(String type) {
         ProfileEntity profile = profileService.getCurrentProfile();
-        List<CategoryEntity> category = categoryRepository.findByTypeAndProfileId(type,profile.getId());
+        List<CategoryEntity> category = categoryRepository.findByTypeAndProfileId(type, profile.getId());
         return category.stream().map(MapperUtil::categoryEntityToDto).toList();
     }
 
-    public CategoryDto updateCategory(Long categoryId ,CategoryDto categoryDto) {
+    public CategoryDto updateCategory(Long categoryId, CategoryDto categoryDto) {
         ProfileEntity profile = profileService.getCurrentProfile();
         CategoryEntity categoryEntity = categoryRepository.findByIdAndProfileId(categoryId, profile.getId())
-                .orElseThrow(() -> new RuntimeException("Category not found with Category id : " + categoryId));
+                .orElseThrow(() -> {
+                    log.info("Category id {} not found", categoryId);
+                    return new RuntimeException("Category not found with Category id : " + categoryId);
+                });
         categoryEntity.setName(categoryDto.getName());
         categoryEntity.setIcon(categoryDto.getIcon());
         categoryEntity = categoryRepository.save(categoryEntity);

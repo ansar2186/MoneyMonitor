@@ -27,6 +27,7 @@ public class MapperUtil {
                 .email(profileEntity.getEmail())
                 .profileImageUrl(profileEntity.getProfileImageUrl())
                 .createdAt(profileEntity.getCreatedAt())
+                .createdBy(profileEntity.getCreatedBy())
                 .updatedAt(profileEntity.getUpdatedAt())
                 .build();
     }
@@ -48,6 +49,7 @@ public class MapperUtil {
                 .icon(entity.getIcon())
                 .type(entity.getType())
                 .createdDate(entity.getCreatedDate())
+                .createdBy(entity.getCreatedBy())
                 .updatedDate(entity.getUpdatedDate())
                 .build();
     }
@@ -73,6 +75,7 @@ public class MapperUtil {
                 .amount(entity.getAmount())
                 .date(entity.getDate())
                 .created(entity.getCreatedAt())
+                .createdBy(entity.getCreatedBy())
                 .updated(entity.getUpdatedAt())
                 .build();
 
@@ -99,8 +102,8 @@ public class MapperUtil {
                 .amount(entity.getAmount())
                 .date(entity.getDate())
                 .created(entity.getCreatedAt())
+                .createdBy(entity.getCreatedBy())
                 .updated(entity.getUpdatedAt())
                 .build();
-
     }
 }

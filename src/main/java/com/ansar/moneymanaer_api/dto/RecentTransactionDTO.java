@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExpenseDTO {
+public class RecentTransactionDTO {
 
     private Long id;
+    private Long profileId;
     private String name;
     private String icon;
-    private String categoryName;
-    private Long categoryId;
     private BigDecimal amount;
     private LocalDate date;
-    private LocalDateTime created;
-    private String createdBy;
-    private LocalDateTime updated;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String type;
+
 }

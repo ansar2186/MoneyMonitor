@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 
@@ -37,5 +39,14 @@ public class CategoryEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", nullable = false)
     private ProfileEntity profile;
+
+    private String createdBy;
+
+    @PrePersist
+    public void auditInfo() {
+        if (this.createdBy == null) {
+            this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+    }
 
 }

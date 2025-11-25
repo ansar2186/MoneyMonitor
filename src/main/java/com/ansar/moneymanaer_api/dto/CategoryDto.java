@@ -18,5 +18,6 @@ public class CategoryDto {
     private String icon;
     private String type;
     private LocalDateTime createdDate;
+    private String createdBy;
     private LocalDateTime updatedDate;
 }

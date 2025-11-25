@@ -23,5 +23,6 @@ public class IncomeDto {
     private BigDecimal amount;
     private LocalDate date;
     private LocalDateTime created;
+    private String createdBy;
     private LocalDateTime updated;
 }
