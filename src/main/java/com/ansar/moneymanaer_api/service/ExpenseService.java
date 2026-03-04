@@ -97,4 +97,14 @@ public class ExpenseService {
         return list.stream().map(MapperUtil::expenseEntityToDto).toList();
     }
 
+    //Notification
+    public List<ExpenseDTO> getExpenseForUserOnDate(Long profileId,LocalDate date){
+        long startTime = System.currentTimeMillis();
+        List<ExpenseEntity> byProfileIdAndDate = expenseRepository.findByProfileIdAndDate(profileId, date);
+        long endTime = System.currentTimeMillis();
+        log.info(" server processing took time ms {}",(endTime-startTime));
+        return byProfileIdAndDate.stream().map(MapperUtil::expenseEntityToDto).collect(Collectors.toList());
+
+    }
+
 }

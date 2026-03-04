@@ -8,6 +8,8 @@ import com.ansar.moneymanaer_api.repository.CategoryRepository;
 import com.ansar.moneymanaer_api.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ProfileService profileService;
-
+    @CacheEvict(value = "categoryCache", allEntries = true)
     public CategoryDto saveCategory(CategoryDto categoryDto) {
         ProfileEntity currentProfile = profileService.getCurrentProfile();
         log.info("Current Profile : {}", currentProfile.getEmail());
@@ -31,19 +33,27 @@ public class CategoryService {
         log.info("Saved Category successfully : {}", categoryEntity.getName());
         return MapperUtil.categoryEntityToDto(categoryEntity);
     }
-
-    public List<CategoryDto> getCategoriesForCurrentProfile() {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        var categories = categoryRepository.findByProfileId(profile.getId());
+    @Cacheable(
+            value = "categoryCache",
+            key = "'ALL_' + #profileId"
+    )
+    public List<CategoryDto> getCategoriesForCurrentProfile(Long profileId) {
+       // ProfileEntity profile = profileService.getCurrentProfile();
+        log.info("DB CALL → Fetching categories for profile {}", profileId);
+        var categories = categoryRepository.findByProfileId(profileId);
         return categories.stream().map(MapperUtil::categoryEntityToDto).toList();
     }
-
-    public List<CategoryDto> getCategoriesByTypeForCurrentUser(String type) {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        List<CategoryEntity> category = categoryRepository.findByTypeAndProfileId(type, profile.getId());
+    @Cacheable(
+            value = "categoryCache",
+            key = "'TYPE_' + #type + '_' + #profileId"
+    )
+    public List<CategoryDto> getCategoriesByTypeForCurrentUser(String type,Long profileId) {
+        //ProfileEntity profile = profileService.getCurrentProfile();
+        log.info("DB CALL → Fetching categories for type {} and profile {}", type, profileId);
+        List<CategoryEntity> category = categoryRepository.findByTypeAndProfileId(type, profileId);
         return category.stream().map(MapperUtil::categoryEntityToDto).toList();
     }
-
+    @CacheEvict(value = "categoryCache", allEntries = true)
     public CategoryDto updateCategory(Long categoryId, CategoryDto categoryDto) {
         ProfileEntity profile = profileService.getCurrentProfile();
         CategoryEntity categoryEntity = categoryRepository.findByIdAndProfileId(categoryId, profile.getId())

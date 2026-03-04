@@ -2,6 +2,7 @@ package com.ansar.moneymanaer_api.controller;
 
 import com.ansar.moneymanaer_api.dto.CategoryDto;
 import com.ansar.moneymanaer_api.service.CategoryService;
+import com.ansar.moneymanaer_api.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final ProfileService profileService;
 
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
@@ -26,7 +28,7 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getCetegories() {
 
-        List<CategoryDto> categoriesForCurrentProfile = categoryService.getCategoriesForCurrentProfile();
+        List<CategoryDto> categoriesForCurrentProfile = categoryService.getCategoriesForCurrentProfile(profileService.getCurrentProfile().getId());
 
         return ResponseEntity.ok(categoriesForCurrentProfile);
 
@@ -34,7 +36,8 @@ public class CategoryController {
 
     @GetMapping("/{type}")
     public ResponseEntity<List<CategoryDto>> getCategoryByTypeForCurrentUser(@PathVariable String type) {
-        return ResponseEntity.ok(categoryService.getCategoriesByTypeForCurrentUser(type));
+        Long profileId = profileService.getCurrentProfile().getId();
+        return ResponseEntity.ok(categoryService.getCategoriesByTypeForCurrentUser(type,profileId));
 
     }
 
